@@ -25,5 +25,19 @@ int main(int argc, char *argv[]) {
     // Llamar a la función si todo esta correcto
     add_task(argv[2]);
   }
+
+  else if (strcmp(argv[1], "list") == 0) {
+
+    if (argc > 2) {
+
+      printf("Error: tienes demasiados arguementos\n");
+      printf("Uso de list: <fossil list>\n");
+
+      return 1;
+    }
+
+    list_tasks();
+  }
+
   return 0;
 }
