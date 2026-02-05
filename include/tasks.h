@@ -1,13 +1,17 @@
 #ifndef TASKS_H
 #define TASKS_H
 
-typedef struct {         // estructura de una tarea
-  int id;                // para identificar cada tarea
-  char description[100]; // el nombre o descripcion de la tarea
-  int status;            // 0 no completada, 1 completada
+typedef struct {
+  int id;                // Primary key for task identification
+  char description[100]; // Character buffer for task details
+  int status;            // Completion flag (0: Pending | 1: Done)
+
 } Task;
 
-void list_tasks();
-void add_task(char *desc);
+void list_tasks(); /* Reads all tasks from the file and
+                      displaythem in a formatted table */
+
+void add_task(char *desc); /* Adds a new task to the storage file
+                              and assign a unique ID */
 
 #endif

@@ -1,4 +1,5 @@
 bin/
 *.o
 *.txt
+!compile_flags.txt
 fossil
