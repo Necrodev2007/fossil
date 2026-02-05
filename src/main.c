@@ -1,5 +1,6 @@
 #include "tasks.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 int main(int argc, char *argv[]) {
@@ -48,6 +49,23 @@ int main(int argc, char *argv[]) {
     }
 
     list_tasks();
+  }
+
+  else if (strcmp(argv[1], "done") == 0) {
+    if (argc < 3) {
+      printf("Error: Missing task ID.\n");
+      printf("Usage: %s done <id>\n", argv[0]);
+      return 1;
+    }
+
+    int target_id = atoi(argv[2]);
+
+    if (target_id == 0 && strcmp(argv[2], "0") != 0) {
+      printf("Error: '%s' is not a valid ID number.\n", argv[2]);
+      return 1;
+    }
+
+    mark_done(target_id);
   }
 
   else {

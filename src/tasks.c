@@ -58,3 +58,45 @@ void list_tasks() {
 
   fclose(f_read);
 }
+
+void mark_done(int target_id) {
+
+  FILE *f_src = fopen("tasks.txt", "r");
+  FILE *f_tmp = fopen("temp.txt", "w");
+
+  if (f_src == NULL || f_tmp == NULL) {
+    perror("Error opening database");
+    if (f_src)
+      fclose(f_src);
+    if (f_tmp)
+      fclose(f_tmp);
+    return;
+  }
+
+  Task task;
+  int task_found = 0;
+
+  while (fscanf(f_src, "%d|%99[^|]|%d\n", &task.id, task.description,
+                &task.status) != EOF) {
+
+    if (task.id == target_id) {
+
+      task.status = 1;
+      task_found = 1;
+    }
+
+    fprintf(f_tmp, "%d|%s|%d\n", task.id, task.description, task.status);
+  }
+
+  fclose(f_src);
+  fclose(f_tmp);
+
+  if (task_found) {
+    remove("tasks.txt");
+    rename("temp.txt", "tasks.txt");
+    printf("Success: Task %d marked as completed.\n", target_id);
+  } else {
+    remove("temp.txt");
+    printf("Error: Task with ID %d not found.\n", target_id);
+  }
+}
