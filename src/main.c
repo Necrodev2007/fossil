@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
     printf("Available Commands:\n");
     printf("  add \"description\"   Add a new task to the list\n");
     printf("  list                Show all your tasks\n");
+    printf("  delete <id>          Remove a task (aliases: del, rm)\n");
     printf("  help                Display this help message\n");
     printf("--------------------------------------------------\n");
     return 0;
@@ -66,6 +67,24 @@ int main(int argc, char *argv[]) {
     }
 
     mark_done(target_id);
+  }
+
+  else if (strcmp(argv[1], "delete") == 0 || strcmp(argv[1], "del") == 0 ||
+           strcmp(argv[1], "rm") == 0) {
+    if (argc < 3) {
+      printf("Error: Missing task ID.\n");
+      printf("Usage: %s delete <id>\n", argv[0]);
+      return 1;
+    }
+
+    int target_id = atoi(argv[2]);
+
+    if (target_id == 0 && strcmp(argv[2], "0") != 0) {
+      printf("Error: '%s' is not a valid ID number.\n", argv[2]);
+      return 1;
+    }
+
+    delete_task(target_id);
   }
 
   else {

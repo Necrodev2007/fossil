@@ -100,3 +100,53 @@ void mark_done(int target_id) {
     printf("Error: Task with ID %d not found.\n", target_id);
   }
 }
+
+void delete_task(int target_id) {
+
+  FILE *f_src = fopen("tasks.txt", "r");
+  FILE *f_tmp = fopen("temp.txt", "w");
+
+  if (f_src == NULL || f_tmp == NULL) {
+    perror("Error opening database");
+    if (f_src)
+      fclose(f_src);
+    if (f_tmp)
+      fclose(f_tmp);
+    return;
+  }
+
+  Task task;
+  int task_found = 0;
+
+  while (fscanf(f_src, "%d|%99[^|]|%d\n", &task.id, task.description,
+                &task.status) != EOF) {
+
+    if (task.id != target_id) {
+
+      fprintf(f_tmp, "%d|%s|%d\n", task.id, task.description, task.status);
+    } else {
+      task_found = 1;
+    }
+  }
+
+  fclose(f_src);
+  fclose(f_tmp);
+
+  if (task_found) {
+    if (remove("tasks.txt") != 0) {
+      perror("Error: Could not remove original file");
+      remove("temp.txt");
+      return;
+    }
+
+    if (rename("temp.txt", "tasks.txt") != 0) {
+      perror("Error: Could not rename temporary file");
+      return;
+    }
+
+    printf("Success: Task %d deleted.\n", target_id);
+  } else {
+    remove("temp.txt");
+    printf("Error: Task with ID %d not found.\n", target_id);
+  }
+}

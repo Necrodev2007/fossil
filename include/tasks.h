@@ -14,6 +14,8 @@ void list_tasks(); /* Reads all tasks from the file and
 void add_task(char *desc); /* Adds a new task to the storage file
                               and assign a unique ID */
 
-void mark_done(int target_id);
+void mark_done(int target_id); // Mark a task as completed by providing the ID
+
+void delete_task(int target_id); // Remove a task from the list
 
 #endif
