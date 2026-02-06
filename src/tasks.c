@@ -32,13 +32,18 @@ void add_task(char *desc) {
 
 // Reads all tasks from the file and displays them in a formatted table
 void list_tasks() {
-
+  int count = 0;
   char buffer[256];
 
   FILE *f_read = fopen("tasks.txt", "r");
 
   if (f_read == NULL) {
-    printf("No tasks found. Use 'add' to create a new one.\n");
+
+    printf("\n[ FOSSIL TASK LIST ]\n");
+    printf("---------------------------------------------------------\n");
+    printf("   Notice: No database found yet.\n");
+    printf("   Run 'add' to create your first task and start your list!\n");
+    printf("---------------------------------------------------------\n");
     return;
   }
 
@@ -46,14 +51,20 @@ void list_tasks() {
   printf("---------------------------------------------------------\n");
 
   while (fgets(buffer, sizeof(buffer), f_read)) {
-
     Task temp = {0};
 
-    sscanf(buffer, "%d|%[^|]|%d", &temp.id, temp.description, &temp.status);
-
-    printf("ID %d | %-30s | status [%s]\n", temp.id, temp.description,
-           temp.status == 0 ? "PENDING" : "COMPLETE");
+    if (sscanf(buffer, "%d|%[^|]|%d", &temp.id, temp.description,
+               &temp.status) == 3) {
+      printf("ID %d | %-30s | status [%s]\n", temp.id, temp.description,
+             temp.status == 0 ? "PENDING" : "COMPLETE");
+      count++;
+    }
   }
+
+  if (count == 0) {
+    printf("        ( Your task list is currently empty ) \n");
+  }
+
   printf("---------------------------------------------------------\n");
 
   fclose(f_read);
@@ -149,4 +160,32 @@ void delete_task(int target_id) {
     remove("temp.txt");
     printf("Error: Task with ID %d not found.\n", target_id);
   }
+}
+
+void clear_tasks() {
+  FILE *f_clear = fopen("tasks.txt", "w");
+
+  if (f_clear == NULL) {
+    perror("Error: Could not clear the task list");
+    return;
+  }
+
+  fclose(f_clear);
+  printf("Success: All tasks have been cleared.\n");
+}
+
+void fossil_help(char *argv0) {
+
+  printf("\n[ FOSSIL - Task Manager Help ]\n");
+  printf("------------------------------------------------------------\n");
+  printf("Usage: %s <command> [arguments]\n\n", argv0);
+  printf("Available Commands:\n");
+  printf("  %-20s %s\n", "add <description>", "Add a new task to the list");
+  printf("  %-20s %s\n", "list", "Show all your tasks");
+  printf("  %-20s %s\n", "done <id>", "Mark a task as completed");
+  printf("  %-20s %s\n", "delete <id>", "Remove a task (aliases: del, rm)");
+  printf("  %-20s %s\n", "clear", "Delete all tasks from the list");
+  printf("  %-20s %s\n", "help", "Display this help message");
+
+  printf("------------------------------------------------------------\n");
 }

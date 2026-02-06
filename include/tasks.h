@@ -18,4 +18,8 @@ void mark_done(int target_id); // Mark a task as completed by providing the ID
 
 void delete_task(int target_id); // Remove a task from the list
 
+void clear_tasks(); // Clear taks list
+
+void fossil_help(char *argv0); // show command list
+
 #endif
