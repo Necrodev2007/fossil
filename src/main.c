@@ -103,6 +103,17 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  else if (strcmp(argv[1], "stats") == 0) {
+
+    if (argc > 2) {
+      printf("Warning: 'stats' doesn't take additional arguments. Ignoring "
+             "'%s'...\n",
+             argv[2]);
+    }
+
+    show_stats();
+  }
+
   else {
 
     printf("Error: Unknown command '%s'\n", argv[1]);

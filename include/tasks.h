@@ -22,4 +22,5 @@ void clear_tasks(); // Clear taks list
 
 void fossil_help(char *argv0); // show command list
 
+void show_stats(); // show status of all task
 #endif

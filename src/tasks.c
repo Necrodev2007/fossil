@@ -189,3 +189,38 @@ void fossil_help(char *argv0) {
 
   printf("------------------------------------------------------------\n");
 }
+
+void show_stats() {
+  FILE *f = fopen("tasks.txt", "r");
+  if (!f) {
+    printf("Database not found. Add some tasks first!\n");
+    return;
+  }
+
+  Task task;
+  int total = 0, completed = 0, pending = 0;
+  char buffer[256];
+
+  while (fgets(buffer, sizeof(buffer), f)) {
+    if (sscanf(buffer, "%d|%99[^|]|%d", &task.id, task.description,
+               &task.status) == 3) {
+      total++;
+      if (task.status == 1)
+        completed++;
+      else
+        pending++;
+    }
+  }
+  fclose(f);
+
+  if (total == 0) {
+    printf("The task list is currently empty. Nothing to report.\n");
+    return;
+  }
+
+  float progress = ((float)completed / (float)total) * 100.0f;
+
+  printf("\n--- FOSSIL STATS ---\n");
+  printf("Tasks: %d | Done: %d | Pending: %d\n", total, completed, pending);
+  printf("Overall Progress: %.1f%%\n", progress);
+}
