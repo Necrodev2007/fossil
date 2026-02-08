@@ -122,6 +122,25 @@ int main(int argc, char *argv[]) {
     edit_task(atoi(argv[2]), argv[3]);
   }
 
+  else if (strcmp(argv[1], "prune") == 0) {
+
+    if (argc > 2) {
+      printf("Error: 'prune' does not require additional arguments.\n");
+      printf("Usage: %s prune\n", argv[0]);
+      return 1;
+    }
+
+    char confirm;
+    printf("Are you sure you want to delete all completed tasks? (y/n): ");
+    scanf(" %c", &confirm);
+
+    if (confirm == 'y' || confirm == 'Y') {
+      clear_completed();
+    } else {
+      printf("Operation canceled.\n");
+    }
+  }
+
   else {
 
     printf("Error: Unknown command '%s'\n", argv[1]);

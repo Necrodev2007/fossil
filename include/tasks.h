@@ -28,4 +28,6 @@ void show_stats(); // show status of all task
 
 void edit_task(int target_id, const char *new_description);
 
+void clear_completed();
+
 #endif

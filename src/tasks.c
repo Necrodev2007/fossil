@@ -270,3 +270,45 @@ void edit_task(int target_id, const char *new_description) {
     printf("Error: Task %d not found.\n", target_id);
   }
 }
+
+void clear_completed() {
+  FILE *f_src = fopen(DB_PATH, "r");
+  FILE *f_tmp = fopen(DB_TEMP_PATH, "w");
+
+  if (!f_src || !f_tmp) {
+    perror("Database error");
+    if (f_src)
+      fclose(f_src);
+    if (f_tmp)
+      fclose(f_tmp);
+    return;
+  }
+
+  Task task;
+  int deleted_count = 0;
+  int new_id = 1;
+
+  while (fscanf(f_src, "%d|%99[^|]|%d\n", &task.id, task.description,
+                &task.status) != EOF) {
+    // Solo escribimos las tareas que NO están completas (status == 0)
+    if (task.status == 0) {
+      fprintf(f_tmp, "%d|%s|%d\n", new_id, task.description, task.status);
+      new_id++;
+    } else {
+      deleted_count++;
+    }
+  }
+
+  fclose(f_src);
+  fclose(f_tmp);
+
+  if (deleted_count > 0) {
+    remove(DB_PATH);
+    rename(DB_TEMP_PATH, DB_PATH);
+    printf("Success: %d completed tasks removed. IDs re-indexed.\n",
+           deleted_count);
+  } else {
+    remove(DB_TEMP_PATH);
+    printf("No completed tasks found to remove.\n");
+  }
+}
