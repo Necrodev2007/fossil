@@ -231,3 +231,42 @@ void show_stats() {
   printf("Tasks: %d | Done: %d | Pending: %d\n", total, completed, pending);
   printf("Overall Progress: %.1f%%\n", progress);
 }
+
+void edit_task(int target_id, const char *new_description) {
+  FILE *f_src = fopen(DB_PATH, "r");
+  FILE *f_tmp = fopen(DB_TEMP_PATH, "w");
+
+  if (!f_src || !f_tmp) {
+    perror("Database error");
+    if (f_src)
+      fclose(f_src);
+    if (f_tmp)
+      fclose(f_tmp);
+    return;
+  }
+
+  Task task;
+  int task_found = 0;
+
+  while (fscanf(f_src, "%d|%99[^|]|%d\n", &task.id, task.description,
+                &task.status) != EOF) {
+    if (task.id == target_id) {
+      task_found = 1;
+      fprintf(f_tmp, "%d|%s|%d\n", task.id, new_description, task.status);
+    } else {
+      fprintf(f_tmp, "%d|%s|%d\n", task.id, task.description, task.status);
+    }
+  }
+
+  fclose(f_src);
+  fclose(f_tmp);
+
+  if (task_found) {
+    remove(DB_PATH);
+    rename(DB_TEMP_PATH, DB_PATH);
+    printf("Success: Task %d updated.\n", target_id);
+  } else {
+    remove(DB_TEMP_PATH);
+    printf("Error: Task %d not found.\n", target_id);
+  }
+}

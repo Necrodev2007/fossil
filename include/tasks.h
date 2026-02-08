@@ -26,4 +26,6 @@ void fossil_help(char *argv0); // show command list
 
 void show_stats(); // show status of all task
 
+void edit_task(int target_id, const char *new_description);
+
 #endif

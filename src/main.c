@@ -114,6 +114,14 @@ int main(int argc, char *argv[]) {
     show_stats();
   }
 
+  else if (strcmp(argv[1], "edit") == 0) {
+    if (argc < 4) {
+      printf("Usage: %s edit <id> <new_description>\n", argv[0]);
+      return 1;
+    }
+    edit_task(atoi(argv[2]), argv[3]);
+  }
+
   else {
 
     printf("Error: Unknown command '%s'\n", argv[1]);
