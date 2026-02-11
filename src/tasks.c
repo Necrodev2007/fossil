@@ -57,7 +57,9 @@ void list_tasks() {
 
     if (sscanf(buffer, "%d|%[^|]|%d", &temp.id, temp.description,
                &temp.status) == 3) {
-      printf(" ID %-4d | %-40.40s | status [%-8s]\n", temp.id, temp.description,
+
+      printf(" ID %-4d | %-40.40s | status %s[%-8s]\033[0m\n", temp.id,
+             temp.description, temp.status == 0 ? "\033[31m" : "\033[32m",
              temp.status == 0 ? "PENDING" : "COMPLETE");
       count++;
     }
